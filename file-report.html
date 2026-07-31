@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilities Desk — Submit Work Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #07080E;
+    --color-surface: rgba(18, 20, 32, 0.75);
+    --color-surface-hover: rgba(26, 29, 46, 0.85);
+    --color-surface-solid: #11131F;
+    --color-ink: #F1F5F9;
+    --color-ink-soft: #94A3B8;
+    --color-primary: #8B5CF6;
+    --color-primary-light: #A855F7;
+    --color-primary-glow: rgba(139, 92, 246, 0.35);
+    --color-amber: #F59E0B;
+    --color-amber-glow: rgba(245, 158, 11, 0.25);
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-strong: rgba(139, 92, 246, 0.25);
+    
+    --radius-sm: 10px;
+    --radius: 18px;
+    --radius-lg: 28px;
+    
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    --shadow-bento: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--color-border);
+    --shadow-glow: 0 0 0 3px var(--color-primary-glow);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; }
+  
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Animated Canvas Background */
+  #bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* Deep Background Radial Lighting */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1200px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(245, 158, 11, 0.04) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(60px);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    margin: 0 0 .6em 0;
+    letter-spacing: -0.025em;
+    color: #FFF;
+  }
+
+  button { font-family: var(--font-sans); cursor: pointer; border: none; background: none; }
+
+  select, input, textarea {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    background: rgba(10, 11, 18, 0.8);
+    color: var(--color-ink);
+    transition: all 0.25s var(--ease-out);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    width: 100%;
+  }
+
+  select option {
+    background: var(--color-surface-solid);
+    color: var(--color-ink);
+  }
+
+  select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-glow), inset 0 2px 4px rgba(0,0,0,0.4);
+    background: rgba(15, 17, 28, 0.95);
+  }
+
+  .app-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 24px 80px;
+  }
+
+  /* Bento Box Utility Styling */
+  .bento-card {
+    background: var(--color-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-bento);
+    transition: all 0.3s var(--ease-out);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bento-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent 60%, rgba(139, 92, 246, 0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 16px; }
+  
+  .brand-mark {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #4C1D95 100%);
+    color: #FFF;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .brand-title { font-weight: 800; font-size: 1.25rem; color: #FFF; letter-spacing: -0.02em; }
+  .brand-sub { font-size: 0.7rem; color: var(--color-amber); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; display: block; }
+
+  /* Hero Section */
+  .hero {
+    padding: 48px 40px;
+    margin-bottom: 28px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Central Animated Maintenance Node / Orb Representation */
+  .orb-visual {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .orb-core {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-primary-light) 0%, var(--color-primary) 60%, #4C1D95 100%);
+    box-shadow: 0 0 30px var(--color-primary-light), inset 0 0 15px rgba(255,255,255,0.6);
+    animation: pulseCore 3s ease-in-out infinite alternate;
+  }
+
+  .orb-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px cubic-bezier(0, 0, 0.2, 1) transparent;
+    border-top: 2px solid var(--color-amber);
+    border-bottom: 2px solid var(--color-primary);
+    animation: spinRing 8s linear infinite;
+  }
+
+  .orb-ring-2 {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 1px dashed rgba(139, 92, 246, 0.4);
+    animation: spinRing 16s linear infinite reverse;
+  }
+
+  @keyframes pulseCore {
+    0% { transform: scale(0.92); box-shadow: 0 0 20px var(--color-primary); }
+    100% { transform: scale(1.08); box-shadow: 0 0 40px var(--color-primary-light), 0 0 15px var(--color-amber); }
+  }
+
+  @keyframes spinRing {
+    100% { transform: rotate(360deg); }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--color-amber);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    max-width: 700px;
+    line-height: 1.15;
+    background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    max-width: 600px;
+    color: var(--color-ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* Form Container */
+  .ticket-form { padding: 40px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .ticket-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #E2E8F0;
+  }
+
+  .ticket-form label.full { grid-column: 1 / -1; margin-bottom: 0; }
+  .ticket-form .hint { font-weight: 400; color: var(--color-ink-soft); font-size: 0.8rem; }
+
+  .checkbox-row {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 12px !important;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(10, 11, 18, 0.4);
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    transition: all 0.2s ease;
+  }
+
+  .checkbox-row:hover {
+    border-color: var(--color-border-strong);
+    background: rgba(15, 17, 28, 0.6);
+  }
+
+  .checkbox-row input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 50%, #6D28D9 100%);
+    color: #FFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 16px 32px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.25s var(--ease-out);
+    box-shadow: 0 4px 20px var(--color-primary-glow);
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(139, 92, 246, 0.5);
+    filter: brightness(1.1);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #E2E8F0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-border-strong);
+    color: #FFF;
+  }
+
+  .photo-input-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+  .photo-file-input { display: none; }
+  .photo-preview { display: none; position: relative; }
+  .photo-preview.show { display: block; }
+  
+  .photo-preview img {
+    width: 88px;
+    height: 88px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-strong);
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .photo-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #EF4444;
+    color: #FFF;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease;
+  }
+
+  .photo-remove:hover { transform: scale(1.15); }
+
+  @media (max-width: 768px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .hero { padding: 36px 20px; }
+    .ticket-form { padding: 24px; }
+    .app-shell { padding: 16px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="app-shell">
+
+  <header class="topbar bento-card">
+    <div class="brand">
+      <span class="brand-mark">FD</span>
+      <div class="brand-text">
+        <span class="brand-title">Facilities Desk</span>
+        <span class="brand-sub">Campus Work Order System</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero bento-card">
+      <div class="orb-visual">
+        <div class="orb-ring-2"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-core"></div>
+      </div>
+      <p class="eyebrow">Work Order Request</p>
+      <h1>Something's broken? File it in under a minute.</h1>
+      <p class="hero-sub">Every report gets a ticket number, a status you can track, and a facilities team member who owns it — instead of disappearing into a group chat.</p>
+    </div>
+
+    <form id="report-form" class="ticket-form bento-card">
+      <div class="form-grid">
+        <label>Category
+          <select name="category" id="f-category" required></select>
+        </label>
+        <label>Urgency
+          <select name="urgency" id="f-urgency" required>
+            <option value="Low">Low — no safety risk, can wait</option>
+            <option value="Medium" selected>Medium — affects use of the space</option>
+            <option value="High">High — safety risk, needs immediate attention</option>
+          </select>
+        </label>
+        <label>Building
+          <select name="building" id="f-building" required></select>
+        </label>
+        <label>Room / Location
+          <input type="text" name="room" id="f-room" placeholder="e.g. Room 214, Main Hallway, Lab B" required>
+        </label>
+        <label class="full">Description
+          <span class="hint">Be as specific as possible. What's broken? Where exactly is it?</span>
+          <textarea name="description" id="f-description" rows="4" required></textarea>
+        </label>
+        <label>Reported by (optional)
+          <span class="hint">Name or ID, if you'd like to be contacted for follow-up.</span>
+          <input type="text" name="reporter" id="f-reporter" placeholder="e.g. Jane Doe, Student ID 12345">
+        </label>
+        <label>Phone or email for updates (optional)
+          <span class="hint">We'll send a text or email the moment this is marked resolved.</span>
+          <input type="text" name="contact" id="f-contact" placeholder="e.g. (555) 123-4567 or jane@school.edu">
+        </label>
+        <label class="checkbox-row full">
+          <input type="checkbox" name="anon" id="f-anon">
+          Report Anonymously
+        </label>
+        <label class="full">Photo (optional)
+          <span class="hint">Take a picture of the problem so facilities can see exactly what's wrong.</span>
+          <div class="photo-input-row">
+            <input type="file" accept="image/*" capture="environment" id="f-photo" class="photo-file-input">
+            <button type="button" class="btn-secondary" id="btn-photo-trigger">Take / Upload Photo</button>
+            <div class="photo-preview" id="photo-preview">
+              <img id="photo-preview-img" alt="Preview">
+              <button type="button" class="photo-remove" id="btn-photo-remove" aria-label="Remove photo">&times;</button>
+            </div>
+          </div>
+        </label>
+      </div>
+      <button type="submit" class="btn-primary">Submit Report</button>
+    </form>
+  </main>
+
+</div>
+
+<script>
+(function(){
+  // --- Ambient Maintenance Canvas Animation ---
+  function initBgCanvas() {
+    var canvas = document.getElementById('bg-canvas');
+    var ctx = canvas.getContext('2d');
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', function(){
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    var particles = [];
+    var count = Math.floor((width * height) / 18000);
+
+    for (var i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -Math.random() * 0.4 - 0.1,
+        size: Math.random() * 1.8 + 0.5,
+        alpha: Math.random() * 0.5 + 0.1
+      });
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Subtle Blueprint Grid Overlay Lines
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.03)';
+      ctx.lineWidth = 1;
+      var gridSize = 60;
+      for (var x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (var y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Industrial Sparkles/Particles Floating Upward
+      for (var j = 0; j < particles.length; j++) {
+        var p = particles[j];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.y < 0) p.y = height;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+
+        ctx.fillStyle = 'rgba(168, 85, 247, ' + p.alpha + ')';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(render);
+    }
+    render();
+  }
+
+  // --- Original Form Functionality preserved strictly ---
+  var CATEGORIES = ["Electrical","Plumbing","Furniture","IT & Wi-Fi","HVAC","Structural","Cleaning","Other"];
+  var BUILDINGS = ["Main Library","Engineering Block","Science Complex","Student Union","Hostel Block A","Hostel Block B","Sports Complex","Admin Block"];
+  var pendingPhoto = null;
+
+  function padId(n){ return "WO-" + String(n).padStart(4,"0"); }
+
+  function init(){
+    initBgCanvas();
+
+    var categorySelect = document.getElementById("f-category");
+    CATEGORIES.forEach(function(cat){ categorySelect.add(new Option(cat, cat)); });
+
+    var buildingSelect = document.getElementById("f-building");
+    BUILDINGS.forEach(function(bld){ buildingSelect.add(new Option(bld, bld)); });
+
+    setupEventListeners();
+  }
+
+  function setupEventListeners(){
+    document.getElementById("report-form").addEventListener("submit", handleReportSubmit);
+    
+    document.getElementById("f-anon").addEventListener("change", function(e){
+      document.getElementById("f-reporter").disabled = e.target.checked;
+      if(e.target.checked) document.getElementById("f-reporter").value = "";
+    });
+
+    var photoInput = document.getElementById("f-photo");
+    document.getElementById("btn-photo-trigger").addEventListener("click", function(){ photoInput.click(); });
+    photoInput.addEventListener("change", function(e){
+      var file = e.target.files && e.target.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(evt){
+        pendingPhoto = evt.target.result;
+        document.getElementById("photo-preview-img").src = pendingPhoto;
+        document.getElementById("photo-preview").classList.add("show");
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("btn-photo-remove").addEventListener("click", function(){
+      pendingPhoto = null;
+      photoInput.value = "";
+      document.getElementById("photo-preview").classList.remove("show");
+      document.getElementById("photo-preview-img").src = "";
+    });
+  }
+
+  function handleReportSubmit(e){
+    e.preventDefault();
+    var form = e.target;
+    
+    // Read current stored tickets to generate next ID
+    var stored = localStorage.getItem("facilitiesIssues");
+    var issues = stored ? JSON.parse(stored) : [];
+
+    var newIssue = {
+      id: padId(issues.length + 1),
+      category: form.elements["category"].value,
+      urgency: form.elements["urgency"].value,
+      building: form.elements["building"].value,
+      room: form.elements["room"].value,
+      description: form.elements["description"].value,
+      reporter: form.elements["anon"].checked ? "Anonymous" : form.elements["reporter"].value.trim() || "Anonymous",
+      contact: form.elements["contact"].value.trim() || null,
+      status: "Open",
+      reportedDate: new Date().toISOString(),
+      resolvedDate: null,
+      resolutionNote: null,
+      viewed: false,
+      photo: pendingPhoto,
+      notification: null
+    };
+
+    issues.push(newIssue);
+    localStorage.setItem("facilitiesIssues", JSON.stringify(issues));
+
+    // Redirect to management app with auto-popup query parameter
+    window.location.href = "admin.html?newTicket=" + newIssue.id;
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

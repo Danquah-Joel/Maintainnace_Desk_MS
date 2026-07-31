@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilities Desk — Management Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #0F172A;
+    --color-surface: rgba(255, 255, 255, 0.95);
+    --color-surface-glass: rgba(30, 41, 59, 0.75);
+    --color-ink: #0F172A;
+    --color-ink-soft: #64748B;
+    --color-ink-light: #F8FAFC;
+    --color-primary: #1E293B;
+    --color-primary-light: #334155;
+    --color-accent: #2563EB;
+    --color-amber: #D97706;
+    --color-amber-light: #F59E0B;
+    --color-border: rgba(226, 232, 240, 0.8);
+    --color-border-dark: rgba(255, 255, 255, 0.12);
+    --radius-sm: 8px;
+    --radius: 14px;
+    --radius-lg: 24px;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.12);
+    --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+
+  body {
+    background-color: var(--color-bg);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(217, 119, 6, 0.12) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.8) 0px, transparent 100%);
+    background-attachment: fixed;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+
+  .top-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-dark);
+  }
+
+  .brand { display: flex; align-items: center; gap: 14px; }
+  
+  .brand-mark {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 1.05rem;
+    background: linear-gradient(135deg, var(--color-amber-light) 0%, var(--color-amber) 100%);
+    color: #0F172A;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+  }
+
+  .brand-title { font-weight: 800; font-size: 1.15rem; color: #FFF; letter-spacing: -0.02em; }
+  .brand-sub { font-size: 0.7rem; color: var(--color-amber-light); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; display: block; }
+
+  .public-link {
+    color: #94A3B8;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-dark);
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .public-link:hover {
+    color: #FFF;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .auth-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    flex: 1;
+  }
+
+  .auth-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-amber) 100%);
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.03em;
+  }
+
+  .auth-header p {
+    font-size: 0.88rem;
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--color-ink-soft);
+    font-size: 1.1rem;
+    pointer-events: none;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px 16px 14px 44px;
+    font-size: 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: #F8FAFC;
+    color: var(--color-ink);
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .form-input:focus {
+    outline: none;
+    background: #FFF;
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-ink-soft);
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .remember-me input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .forgot-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .forgot-link:hover { text-decoration: underline; }
+
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+    color: #FFF;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.25);
+    background: var(--color-primary-light);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 28px 0;
+    color: var(--color-ink-soft);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .divider span { padding: 0 12px; }
+
+  .demo-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn-demo {
+    background: #F1F5F9;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+    text-align: center;
+  }
+
+  .btn-demo:hover {
+    background: #E2E8F0;
+    border-color: #CBD5E1;
+  }
+
+  .secondary-action {
+    margin-top: 28px;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.88rem;
+    color: var(--color-ink-soft);
+  }
+
+  .secondary-action a {
+    color: var(--color-amber);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .secondary-action a:hover { text-decoration: underline; }
+
+  .error-message {
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #DC2626;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: none;
+    text-align: center;
+  }
+
+  .footer-copy {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.78rem;
+    color: #64748B;
+  }
+</style>
+</head>
+<body>
+
+  <header class="top-banner">
+    <div class="brand">
+      <span class="brand-mark">FD</span>
+      <div class="brand-text">
+        <span class="brand-title">Facilities Desk</span>
+        <span class="brand-sub">Management Portal</span>
+      </div>
+    </div>
+    <a href="index.html" class="public-link">
+      File a Work Order &rarr;
+    </a>
+  </header>
+
+  <main class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Staff Sign In</h1>
+        <p>Access the facilities management console</p>
+      </div>
+
+      <div id="error-box" class="error-message">Invalid username or password</div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <div class="input-container">
+            <span class="input-icon">&#9993;</span>
+            <input type="text" id="username" class="form-input" placeholder="Username or Email" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <span class="input-icon">&#128274;</span>
+            <input type="password" id="password" class="form-input" placeholder="Password" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="remember">
+            Remember me
+          </label>
+          <a href="#" class="forgot-link" onclick="alert('Please contact your IT administrator to reset your password.'); return false;">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-submit">Sign In to Dashboard</button>
+      </form>
+
+      <div class="divider">
+        <span>Quick Demo Login</span>
+      </div>
+
+      <div class="demo-actions">
+        <button type="button" class="btn-demo" id="btn-demo-admin">Login as Admin</button>
+        <button type="button" class="btn-demo" id="btn-demo-staff">Login as Staff</button>
+      </div>
+
+      <div class="secondary-action">
+        Submitting a ticket? <a href="index.html">Click here to File a Report</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-copy">
+    &copy; Facilities Desk. All rights reserved.
+  </footer>
+
+<script>
+(function(){
+  var loginForm = document.getElementById("login-form");
+  var errorBox = document.getElementById("error-box");
+
+  // Handle Form Submission
+  loginForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    var user = document.getElementById("username").value.trim();
+    var pass = document.getElementById("password").value.trim();
+
+    if(user && pass) {
+      executeLogin("admin", "Danquah Joel");
+    } else {
+      showError("Please fill in all fields.");
+    }
+  });
+
+  // Demo Login Quick Buttons
+  document.getElementById("btn-demo-admin").addEventListener("click", function(){
+    executeLogin("admin", "Danquah Joel");
+  });
+
+  document.getElementById("btn-demo-staff").addEventListener("click", function(){
+    executeLogin("staff", "Facilities Team Member");
+  });
+
+  function executeLogin(role, name) {
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userRole", role);
+    localStorage.setItem("userName", name);
+    window.location.href = "admin.html";
+  }
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = "block";
+  }
+})();
+</script>
+</body>
+</html>

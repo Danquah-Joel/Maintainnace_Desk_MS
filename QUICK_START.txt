@@ -1,0 +1,279 @@
+===============================================================================
+                    FACILITIES DESK — QUICK START GUIDE
+===============================================================================
+
+SUBMISSION PACKAGE CONTENTS:
+───────────────────────────────────────────────────────────────────────────
+
+📄 FILES:
+  • index.html                          → Landing page (start here!)
+  • file-report.html                    → Student form to submit work orders
+  • login.html                          → Staff login page
+  • admin.html                          → Management dashboard & ticket board
+  • facilities-desk.html                → Original all-in-one prototype
+  • README.md                           → Full documentation
+  • Facilities-Desk-Documentation.docx  → Project report & architecture
+  • QUICK_START.txt                     → This file
+
+===============================================================================
+🚀 GETTING STARTED (60 SECONDS)
+===============================================================================
+
+OPTION A: Open in Browser (Fastest)
+────────────────────────────────────
+1. Download all files to a folder
+2. Right-click on index.html
+3. Select "Open with" → Choose your browser (Chrome, Firefox, Edge, Safari)
+4. That's it! You're live.
+
+OPTION B: Run a Local Server (Better)
+──────────────────────────────────────
+If you have Python 3:
+  $ cd facilities-desk
+  $ python3 -m http.server 8000
+  
+Then visit: http://localhost:8000
+
+If you have Node.js:
+  $ npx http-server
+
+===============================================================================
+📝 DEMO SCRIPT (Perfect for Tomorrow's Presentation)
+===============================================================================
+
+1. START AT INDEX.HTML
+   - Shows the landing page with two big buttons
+   - Explain: "One path for students, one for staff"
+
+2. CLICK "FILE A REPORT"
+   → This opens file-report.html
+   - Walk through the form
+   - Point out: Category, Urgency, Building, Room, Description
+   - Note: Optional photo upload
+   - Note: Anonymous reporting option
+   - Fill it out and click Submit
+
+3. LOOK AT SUBMISSION SUCCESS
+   → Shows ticket ID (e.g., WO-0001)
+   - Point out: "Every report gets an automatic ticket number"
+   - Click "Manage Ticket" to see it on the board
+
+4. GO BACK TO INDEX AND CLICK "MANAGEMENT"
+   → Opens login.html
+   - Click "Login as Admin" (demo login, no credentials needed)
+
+5. SHOW THE ADMIN DASHBOARD (admin.html)
+   → This is the facilities staff view
+   - Explain the board layout (cards showing all tickets)
+   - Show filters: by category, building, status, urgency
+   - Click on a ticket to see details
+   - Advance status: Open → Acknowledged → In Progress → Resolved
+   - Add a resolution note, click "Mark resolved"
+
+6. SHOW THE DASHBOARD TAB
+   → Statistics at the top
+   - Total tickets, pending, in progress, resolved
+   - Charts showing issues by category and status
+   - Point out: "This is the data your university didn't have before"
+
+7. EXPLAIN THE ARCHITECTURE
+   - Reference the architecture diagram in the documentation
+   - This prototype: All in-browser, no backend needed
+   - Production version: Would have a database, real login, notifications
+
+===============================================================================
+💡 KEY TALKING POINTS FOR GRADERS
+===============================================================================
+
+✅ "This solves a real, overlooked problem"
+   → Facility issues are reported verbally and lost
+   → This gives a campus data it was missing
+
+✅ "No database needed (for the prototype)"
+   → All data stored in browser localStorage
+   → Perfect for a demo, easily upgradable to a real backend
+
+✅ "User-centered design"
+   → Students can file a report in under 1 minute
+   → Staff gets a clear, filterable queue
+   → Anonymous reporting option for sensitive situations
+
+✅ "Full workflow demonstrated"
+   → Report → Ticket number → Track status → Resolution
+   → End-to-end lifecycle visible
+
+✅ "Production-ready architecture"
+   → The roadmap in README shows clear path to production
+   → Not a throwaway prototype, but a foundation
+
+===============================================================================
+🔄 DATA FLOW (Quick Explanation)
+===============================================================================
+
+Student fills form
+    ↓
+Data saved to browser storage
+    ↓
+Redirects to admin with ticket ID visible
+    ↓
+Staff sees it immediately on the board
+    ↓
+Staff updates status (Acknowledged → In Progress → Resolved)
+    ↓
+Data persists in browser (even if you close and reopen)
+    ↓
+Dashboard shows aggregate trends
+
+→ No database, no backend, no servers needed for this prototype.
+
+===============================================================================
+🧪 DEMO DATA
+===============================================================================
+
+When you open admin.html for the first time, it loads with 12 sample tickets
+so you can immediately show:
+  • Filtering by category, building, urgency, status
+  • The dashboard with charts
+  • Updating ticket status
+  • Resolution notes
+
+You can also:
+  • File your own report through the form
+  • See it appear on the board instantly
+  • Manage it as staff
+
+To reset to just sample data:
+  1. Open browser DevTools (F12)
+  2. Go to Application → Local Storage
+  3. Delete "facilitiesIssues"
+  4. Refresh admin.html
+
+===============================================================================
+📊 FILES AT A GLANCE
+===============================================================================
+
+index.html (4.9 KB)
+  └─ Landing page with two CTAs
+  └─ Routes to either File a Report or Management
+
+file-report.html (14 KB)
+  ├─ Student-facing form
+  ├─ Fields: Category, Urgency, Building, Room, Description, Contact
+  ├─ Optional: Reporter name, Photo upload, Anonymous checkbox
+  └─ Stores data in localStorage, redirects to admin.html
+
+login.html (12 KB)
+  ├─ Staff login page
+  ├─ Demo buttons: "Login as Admin" or "Login as Staff"
+  ├─ Sets session in localStorage
+  └─ Redirects to admin.html
+
+admin.html (33 KB)
+  ├─ Main management dashboard
+  ├─ Three tabs: Tickets Board, Work Orders (advanced board), Dashboard
+  ├─ Shows all tickets from localStorage
+  ├─ Filterable by category, building, status, urgency
+  ├─ Click tickets to view/manage
+  ├─ Advance status from Open → Acknowledged → In Progress → Resolved
+  ├─ Add resolution notes
+  ├─ Dashboard with stats and charts (uses Chart.js)
+  └─ All data persists via localStorage
+
+facilities-desk.html (36 KB)
+  └─ Alternative all-in-one prototype (same system, single file)
+
+README.md (10 KB)
+  └─ Full documentation, customization guide, production roadmap
+
+Facilities-Desk-Documentation.docx (176 KB)
+  └─ Formal project report with architecture diagrams, roadmap, etc.
+
+===============================================================================
+✅ CHECKLIST FOR SUBMISSION
+===============================================================================
+
+Before you submit, verify:
+
+□ All 4 HTML files present (index, file-report, login, admin)
+□ README.md is readable
+□ Facilities-Desk-Documentation.docx has your name/date filled in
+□ Test the flow: index → file report → admin login → manage ticket
+□ Test filters: try filtering by status, category, building
+□ Test photo upload: take a screenshot, upload it with a test report
+□ Test status updates: open a ticket, advance status to Resolved
+□ Check dashboard: view charts and statistics
+□ Clean browser cache and reopen — data should persist
+
+===============================================================================
+🎓 WHAT MAKES THIS SUBMISSION STRONG
+===============================================================================
+
+1. REAL PROBLEM
+   → Campus facility issues go unreported because there's no system
+
+2. COMPLETE WORKFLOW
+   → Not just a form, but the entire report → track → resolve cycle
+
+3. WORKING PROTOTYPE
+   → Everything actually functions, not wireframes or mockups
+
+4. NO BARRIERS TO RUNNING
+   → Works in any browser, no installation, no database
+
+5. CLEAR PATH TO PRODUCTION
+   → Architecture diagram shows upgrades (database, auth, notifications)
+
+6. GOOD UX
+   → Accessible design, clear navigation, helpful hints
+
+7. MULTIPLE PERSPECTIVES
+   → Student view (file report) AND staff view (manage tickets)
+
+===============================================================================
+❓ COMMON QUESTIONS GRADERS MIGHT ASK
+===============================================================================
+
+Q: "Why no database in the prototype?"
+A: "Scope decision. The focus was workflow design and UX. Production version
+   (documented in the roadmap) would upgrade to PostgreSQL + REST API backend."
+
+Q: "Isn't localStorage limited?"
+A: "For a campus, yes — real system would be server-backed. But for this
+   prototype and small deployments, localStorage is perfect. ~5-10MB per
+   domain is more than enough for thousands of tickets."
+
+Q: "Why this particular problem?"
+A: "It's common, invisible, and never gets built because it's not glamorous.
+   Perfect for showing real-world problem-solving, not just coding skill."
+
+Q: "What about authentication?"
+A: "The login page demos the flow. Production would use university OAuth
+   (SAML/CAS) or a proper password backend. Documented in production roadmap."
+
+Q: "Can you add more features?"
+A: "Absolutely. All customization is documented in README.md. The code is
+   modular and easy to extend with photo galleries, email alerts, etc."
+
+===============================================================================
+🚀 NEXT STEPS
+===============================================================================
+
+TONIGHT:
+  1. Read through README.md so you know every feature
+  2. Test the complete flow end-to-end
+  3. Practice the demo script (takes 3 minutes)
+
+TOMORROW:
+  1. Open index.html in a fresh browser
+  2. Follow the demo script
+  3. Mention the "overlooked problem" angle
+  4. Point to architecture diagram and production roadmap
+  5. Be ready to answer "what would production look like?"
+
+===============================================================================
+
+Good luck on your submission! You've built something useful and well-thought-out.
+
+Questions? Read README.md or the full Facilities-Desk-Documentation.docx
+
+===============================================================================

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilities Desk — Campus Work Order System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #0F172A;
+    --color-surface: #FFFFFF;
+    --color-ink: #0F172A;
+    --color-ink-soft: #64748B;
+    --color-primary: #1E293B;
+    --color-accent: #2563EB;
+    --color-amber: #D97706;
+    --color-green: #16A34A;
+    --color-border: #E2E8F0;
+    --radius-sm: 8px;
+    --radius: 14px;
+    --radius-lg: 20px;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.45);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+
+  body {
+    background-color: var(--color-bg);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(217, 119, 6, 0.12) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+
+  .hero-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  .brand-icon {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, var(--color-amber) 0%, #F59E0B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #FFF;
+    margin: 0 0 16px 0;
+    line-height: 1.1;
+    max-width: 800px;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: #CBD5E1;
+    max-width: 700px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .cta-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 36px 24px;
+    text-decoration: none;
+    transition: all 0.3s var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cta-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  .cta-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .cta-title {
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--color-primary);
+    margin: 0 0 8px 0;
+  }
+
+  .cta-desc {
+    font-size: 0.88rem;
+    color: var(--color-ink-soft);
+    margin: 0;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .cta-arrow {
+    margin-top: 16px;
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    transition: transform 0.2s var(--ease-out);
+  }
+
+  .cta-card:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .cta-card.report {
+    border-top: 4px solid var(--color-accent);
+  }
+
+  .cta-card.management {
+    border-top: 4px solid var(--color-amber);
+  }
+
+  @media (max-width: 640px) {
+    .cta-grid { grid-template-columns: 1fr; }
+    .hero-wrapper { padding: 40px 20px; }
+  }
+
+  .footer {
+    padding: 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #64748B;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero-wrapper">
+    <span class="brand-icon">⚙️</span>
+    <h1>Facilities Desk</h1>
+    <p class="subtitle">Report broken equipment, track repairs, manage campus facilities — all in one place.</p>
+    
+    <div class="cta-grid">
+      <a href="file-report.html" class="cta-card report">
+        <span class="cta-icon">📝</span>
+        <h3 class="cta-title">File a Report</h3>
+        <p class="cta-desc">Something broken? File a work order in under a minute.</p>
+        <span class="cta-arrow">→</span>
+      </a>
+      
+      <a href="login.html" class="cta-card management">
+        <span class="cta-icon">📊</span>
+        <h3 class="cta-title">Management</h3>
+        <p class="cta-desc">Sign in to manage work orders and track progress.</p>
+        <span class="cta-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    &copy; Facilities Desk. Campus work order tracking system.
+  </footer>
+
+</body>
+</html>
